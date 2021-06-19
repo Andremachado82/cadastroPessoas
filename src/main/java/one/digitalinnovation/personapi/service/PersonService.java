@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import one.digitalinnovation.personapi.dto.MessageResponseDto;
 import one.digitalinnovation.personapi.dto.request.PersonDTO;
 import one.digitalinnovation.personapi.entity.Person;
+import one.digitalinnovation.personapi.exception.PersonNotFoundException;
 import one.digitalinnovation.personapi.mapper.PersonMapper;
 import one.digitalinnovation.personapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,7 @@ public class PersonService {
         Person personToSave = personMapper.toModel(personDTO);
 
         Person savedPerson = repository.save(personToSave);
-        return MessageResponseDto.builder()
-                .message("Created personDTO with ID " + savedPerson.getId())
-                .build();
+        return createMessageResponse(savedPerson.getId(), "Created person with ID ");
     }
 
     public List<PersonDTO> getListAll() {
@@ -35,5 +34,23 @@ public class PersonService {
         return listAllPerson.stream()
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public PersonDTO getById(Long id) throws PersonNotFoundException {
+        Person person = verifyIfExists(id);
+
+        return personMapper.toDTO(person);
+    }
+
+    private Person verifyIfExists(Long id) throws PersonNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+    }
+
+    private MessageResponseDto createMessageResponse(Long id, String message) {
+        return MessageResponseDto
+                .builder()
+                .message(message + id)
+                .build();
     }
 }
