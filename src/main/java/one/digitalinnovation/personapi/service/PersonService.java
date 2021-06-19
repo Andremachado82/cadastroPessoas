@@ -53,4 +53,10 @@ public class PersonService {
                 .message(message + id)
                 .build();
     }
+
+    public void deleteById(Long id) throws PersonNotFoundException {
+        verifyIfExists(id);
+        repository.deleteById(id);
+    }
+
 }

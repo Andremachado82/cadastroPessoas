@@ -28,8 +28,8 @@ public class PersonDTO {
     @Size(min = 2, max = 100)
     private String lastName;
 
+    //    @CPF
     @NotEmpty
-//    @CPF
     private String cpf;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
