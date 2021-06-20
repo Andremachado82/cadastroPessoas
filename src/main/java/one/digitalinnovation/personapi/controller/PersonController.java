@@ -38,6 +38,11 @@ public class PersonController {
         return personService.getById(id);
     }
 
+    @PutMapping("/{id}")
+    public  MessageResponseDto updateById(@PathVariable Long id, @RequestBody @Valid PersonDTO personDTO) throws PersonNotFoundException {
+        return personService.updateById(id, personDTO);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) throws PersonNotFoundException {
